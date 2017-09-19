@@ -1,40 +1,32 @@
-$(document).ready(() => {
-  $('#searchForm').on('submit', (e) => {
-  	let searchText = $('#searchText').val();
-  	getMusic(searchText);
-    e.preventDefaut();
-  });	
-});
-
-function getMusic(searchText){
-   const COINDESK_URI = 'https://api.coindesk.com/v1/bpi/currentprice.json'
+const ITUNES_URI = 'https://itunes.apple.com/search?country=NL'
 
 function receiveData(data) {
-  const conversionData = data.bpi
-  const coinData = document.getElementById('coin-data')
-
-  for (const currency in conversionData) {
-    const node = document.createElement('li')
-    node.innerText = 'One bitcoin buys you ' + conversionData[currency].code + ' ' + conversionData[currency].rate
-    coinData.append(node)
-  }
+  const mike = getElementById('music') 
+  console.log(data)
 }
 
-function grabData() {
+function searchForTerm(term) {
   const xhr = new XMLHttpRequest()
 
   xhr.onreadystatechange = function() {
     if (xhr.readyState !== 4) return
-    console.log(JSON.parse(xhr.response))
+    receiveData(JSON.parse(xhr.response))
   }
 
-  xhr.open('GET', COINDESK_URI)
+  xhr.open('GET', ITUNES_URI + '&term=' + term)
   xhr.send()
 }
 
+function doSearch(event) {
+  if (event.charCode === 13) {
+    event.preventDefault()
+    searchForTerm(event.target.value)
+  }
+}
+
 function init() {
-  grabData()
+  const inputBox = document.getElementById('searchText')
+  inputBox.addEventListener('keypress', doSearch, false)
 }
 
 init()
-}
